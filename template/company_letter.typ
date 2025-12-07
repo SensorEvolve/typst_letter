@@ -3,7 +3,7 @@
 #let letter = pc-letter.init(
   author: (
       // Change this to your own address
-      name: "TENTH Applied Sciences AB",
+      name: "TENTH Applied Science AB",
       address: ("Linnégatan 32", "114 47 Stockholm, Sweden"),
       phone: "+46 (0)70 313  313 7",
       email: "carljohan.legert@tenth.se",
@@ -18,7 +18,7 @@
     medium: "digital",
     text:(
       fill:(
-        headline: rgb("#DC1430"),
+        headline: rgb("060b11"),
       )
     )
   ),
@@ -62,7 +62,7 @@ Cras ac tortor ut odio accumsan mattis. Proin nec vestibulum nulla. Suspendisse 
 
 
 #(letter.valediction)(
-  signature: image("cjl_sign_navy_name.png", height: 3em)
+  signature: image("cjl_sign_navy.png", height: 3em)
 )[Yours sincerely,]
 
 

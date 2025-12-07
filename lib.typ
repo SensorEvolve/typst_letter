@@ -3,11 +3,11 @@
 #import "locals.typ"
 
 /// Deep merge two dictionaries
-/// 
+///
 /// Returns a dictionary containing all the keys and subkeys (recursively)
 /// contained in either dictionary `a` or dictionary `b`. Where a key exists
 /// in both, the value of dictionary `b` is used.
-/// 
+///
 /// -> dictionary
 #let _deep-merge-dicts(
   /// The dictionary onto which dictionary `b` shall be merged
@@ -85,87 +85,87 @@
 )
 
 /// Template initiator function
-/// 
+///
 /// This function should be called at the start of a document. It returns
 /// a dictionary of functions and variables, best thought of as a
 /// "pseudo-module". To access these, you must store the returned dictionary
 /// in a variable.
-/// 
+///
 /// To activate the template styling, the call to `init` should be followed by
 /// a show rule referring to the returned variable `letter-style`.
-/// 
+///
 /// *Minimal working example:*
 /// ```typ
 /// #letter = pc-letter.init(author: (name: "Sherlock Holmes"))
-/// 
+///
 /// #show: letter.letter-style
 /// ```
-/// 
+///
 /// -> dictionary
 #let init(
   /// The letter author's details
-  /// 
+  ///
   /// This should be a dictionary minimally containing the key `name`. The keys
   /// `phone`, `email`, and `web` are optional.
-  /// 
+  ///
   /// -> dictionary
   author: _default-author,
   /// The letter's title (if any)
-  /// 
+  ///
   /// Can be used to (optionally) specify a title for the letter, e.g. the
   /// subject line. This will only be added to the output metadata and not
   /// appear in the letter itself, but may be useful for indexing and searching
   /// digital documents later.
-  /// 
+  ///
   /// -> str | none
   title: none,
   /// The letter's date
-  /// 
+  ///
   /// Can be used to optionally specify the date for the letter. If set to
   /// `auto` (the default), today's date will be used.
-  /// 
+  ///
   /// -> datetime | auto
   date: auto,
   /// The place of the letter's authorship
-  /// 
+  ///
   /// Can be used to optionally specify a place name (usually the place where
   /// the letter itself was written) to show alongside the letter's date, as is
   /// customary in many regions. If set to `none` (the default), no place name
   /// will be shown.
-  /// 
+  ///
   /// Note that, even if specified, whether a place name is displayed or not
   /// depends on the letter's `style.locale` values, as it is by default only
   /// displayed in languages/regions where it is customary to do so. To
   /// overwrite whether the place name is shown, set
   /// `style.components.place-name.display` to `true`.
-  /// 
+  ///
   /// -> str | none
   place-name: none,
   /// A logo to display as part of the letterhead
-  /// 
+  ///
   /// Can be used to optionally specify an image (or anything of type `content`
   /// really) to be displayed alongside the information in the letterhead.
-  /// 
+  ///
   /// *Example:*
   /// ````typ
   /// #letter = pc-letter.init(
   ///   author: (name: "Sherlock Holmes"),
   ///   logo: image("monogram-sh.svg", height: 10mm)
   /// )
-  /// 
+  ///
   /// #show: letter.letter-style
   /// ```
   /// -> content | none
   logo: none,
   /// Custom styling options for the letter
-  /// 
+  ///
   /// Can be used to configure custom styling options for the letter. Most
   /// commonly you will only want to pass a dictionary with a locale (e.g.
   /// `(locale: (lang: "es", region: "MX"))` for _Spanish (Mexico)_ --
   /// note that the default is _English (United Kingdom)_). The
   /// default styling, of not overwritten here, will adjust to sensible
   /// defaults depending on the `locale` specified.
-  /// 
+  ///
   /// Possible keys:
   /// / `locale.lang`: The (main) language of the letter, e.g. `"en"`, `"es"`.
   ///   Default: `"en"`.
@@ -237,7 +237,7 @@
   ///   (`true` or `false`). If set to `auto`, whether to display the return
   ///   address field is determined based on the specified `locale`.
   ///   Default: `auto`.
-  /// 
+  ///
   ///  -> dictionary
   style: (:)
 ) = {
@@ -245,14 +245,14 @@
   // --- Configuration-independent functions --- //
 
   /// Format a phone number
-  /// 
+  ///
   /// Formats a phone number (spaces set at 1/4em) and wraps it in a `tel:`
   /// link.
-  /// 
+  ///
   /// -> content
   let phone-number(
     /// The phone number
-    /// 
+    ///
     /// -> str
     number
   ) = [
@@ -261,35 +261,35 @@
   ]
 
   /// Format an email address
-  /// 
+  ///
   /// Formats an email address and wraps it in a `mailto:` link.
-  /// 
+  ///
   /// -> content
   let email-address(
     /// The email address
-    /// 
+    ///
     /// -> str
     email
   ) = link("mailto:" + email)
 
   /// Formats a web address
-  /// 
+  ///
   /// Formats a web address and wraps it in a link element.
-  /// 
+  ///
   /// -> content
   let web-address(
     /// The destination address
-    /// 
+    ///
     /// Should be a valid URL.
-    /// 
+    ///
     /// -> str
     dest,
     /// Whether to display the link's schema
-    /// 
+    ///
     /// If set to `false`, the initial schema (e.g. `https://`) will be dropped
     /// from the link text (but of course still be included in the linked
     /// destination URL).
-    /// 
+    ///
     /// -> bool
     include-schema: true
   ) = {
@@ -299,16 +299,16 @@
     }
     link(dest, body)
   }
-  
+
   /// Set text as spaced true small caps
-  /// 
+  ///
   /// This will set its content as true small caps with capital letters
   /// converted to small caps, letter spacing of 1/16th em and word spacing of
   /// 1/2 em.
-  /// 
+  ///
   /// Note that this relies on the font supporting true small caps and capital
   /// to small caps conversion (font features `smcp` and `c2sc`, respectively).
-  /// 
+  ///
   /// -> content
   let spaced-smallcaps(content) = [
     #set text(tracking: 0.0625em, spacing: 0.5em, features: (smcp: 1, c2sc: 1))
@@ -316,12 +316,12 @@
   ]
 
   /// Set a thin horizontal space of 1/4em width
-  /// 
+  ///
   /// -> content
   let thin-space() = h(0.125em, weak: true)
 
   /// Set a horizontal en-space (1/2em width)
-  /// 
+  ///
   /// -> content
   let en-space() = h(0.5em, weak: true)
 
@@ -413,18 +413,18 @@
   // --- Configuration-dependent functions --- //
 
   /// Add falzmarken to the left margin of a page
-  /// 
+  ///
   /// Adds three falzmarken to the left margin of the page, two falzmarken of
   /// 1em length which indicate the points at which to fold the paper to fit it
   /// into a DL envelope (windowed or windowless) or a C6 envelope (windowless),
   /// and a third 1/2em falzmark at the vertical center of the page to align a
   /// hole punch or use as a folding mark for a C5 envelope (windowed or
   /// windowless).
-  /// 
+  ///
   /// Falzmarken are usually only added to the very first page of a letter, and
   /// a call to the `falzmarken` function will place the falzmarken only on
   /// the current page.
-  /// 
+  ///
   /// -> content
   let falzmarken() = {
     place(
@@ -448,29 +448,29 @@
   }
 
   /// Sets the recipient's address
-  /// 
+  ///
   /// This will set the address field showing the recipient's address, and
   /// optionally above it a return address for the letter's author.
-  /// 
+  ///
   /// -> content
   let address-field(
     /// The recipient's address
-    /// 
+    ///
     /// Should be no more than 9 lines long. Address lines should normally be
     /// broken by simple linebreaks, not paragraph breaks.
-    /// 
+    ///
     /// -> content | str
     recipient-address,
     /// Content for the return address field
-    /// 
+    ///
     /// If specified, overwrites the content for the return address field
     /// shown immediately above the recipient's address, provided the letter's
     /// `locale` and `style` settings are such that the return address is
     /// displayed.
-    /// 
+    ///
     /// If set to `auto`, the return address is shown as the author's name
     /// and address, separated by bullet points.
-    /// 
+    ///
     /// -> content | str | auto
     return-address-field: auto
   ) = [
@@ -494,7 +494,7 @@
       let x-offset = 0mm
       if style.alignment.address-field == right {
         x-offset = _page-dimensions.width - _page-margins.left - _page-margins.right - 2mm
-        if (style.components.return-address-field.display 
+        if (style.components.return-address-field.display
             and measure(return-address-field).width > measure(recipient-field).width) {
           x-offset -= measure(return-address-field).width
         } else {
@@ -540,23 +540,23 @@
   ]
 
   /// Sets an optional reference number
-  /// 
+  ///
   /// This field can be used to set a reference number, such as one may be asked
   /// to quote on correspondence in a business, legal, or civil matter.
-  /// 
+  ///
   /// -> content
   let reference-field(
     /// The reference number to quote
-    /// 
+    ///
     /// -> str
     reference,
     /// The text that precedes the reference number
-    /// 
+    ///
     /// By default this will be something like "Ref:" or "Reference:" in the
     /// language of the letter, and will be determined automatically by the
     /// template based on the specified `locale`. However, the `supplement`
     /// argument can be used to customise/overwrite this text.
-    /// 
+    ///
     /// -> content | str
     supplement: locals.get-strings(style.locale).reference
   ) = [
@@ -614,15 +614,15 @@
   ]
 
   /// Style function for the document's body
-  /// 
+  ///
   /// Use this with a `show` rule, e.g. ````typ #show: letter.letter-style```.
   /// This will apply all the layout and formatting rules of the template as
   /// they were configured with the `init` call beforehand.
-  /// 
+  ///
   /// -> content
   let letter-style(
     /// The document's body
-    /// 
+    ///
     /// -> content
     body
   ) = [
@@ -691,40 +691,40 @@
   ]
 
   /// Set a valediction at the end of a letter
-  /// 
+  ///
   /// Use this to add a valediction ("formal closing") at the end of a letter,
   /// e.g. "Yours sincerely," or "Yours faithfully",.
-  /// 
+  ///
   /// Using the `valediction` function instead of just a plain text paragraph
   /// ensures that the valediction is spaced and formatted appropriately for the
   /// chosen letter `locale` and style.
-  /// 
+  ///
   /// -> content
   let valediction(
     /// The valediction text
-    /// 
+    ///
     /// For example `"Yours sincerely,"` or `"Yours faithfully,"`. Note that
     /// no punctuation is added, so if you want a comma, colon, or similar you
     /// have to include this in the provided text.
-    /// 
+    ///
     /// -> content | str
     valediction,
     /// An optional signature
-    /// 
+    ///
     /// This can be used to include a signature, e.g. an image you have prepared
     /// or text in a "handwriting" font.
     /// If set to `none`, a vertical space of 3em height is provided instead
     /// for the author to manually sign the letter.
-    /// 
+    ///
     /// -> content
     signature: none,
     /// The author's name
-    /// 
+    ///
     /// This can be used to overwrite the author's name below the signature. If
     /// set to `auto` (the default), the letter author's full name is printed,
     /// if set to `none` then no name is printed at all. If a string or content
     /// is passed, that is printed below the signature space instead.
-    /// 
+    ///
     /// -> auto | none | content | str
     name: auto
   ) = [
@@ -748,19 +748,19 @@
   ]
 
   /// Sets a carbon-copy field at the end of a letter
-  /// 
+  ///
   /// This can be used to tell the recipient(s) that copies of the letter have
   /// been sent to further addressees. The `cc-field` is customarily set after
   /// the `valediction`.
-  /// 
+  ///
   /// How the cc-recipients are set depends on their number: 2 or fewer are
   /// set as a single line of text, separated by comma. 3 or more are set
   /// as a bullet-point list.
-  /// 
+  ///
   /// -> content
   let cc-field(
     /// The carbon-copy recipients
-    /// 
+    ///
     /// -> content | str
     ..recipients
   ) = [
@@ -783,18 +783,18 @@
   ]
 
   /// Sets en enclosed/attached field at the end of the letter
-  /// 
+  ///
   /// This field can be used to tell the recipients about further documents
   /// that have been enclodes/attached to the letter.
-  /// 
+  ///
   /// How the encloded document descriptions are set depends on their number:
   /// a single enclosed document is given without a bullet point, while 2 or
   /// more are set enclosed documents are set as a bullet-point list.
-  /// 
+  ///
   /// -> content
   let enclosed-field(
     /// Descriptions of the enclosed documents
-    /// 
+    ///
     /// -> content | str
     ..enclosures
   ) = [
@@ -820,7 +820,7 @@
         ]
 
       }
-      
+
     ]
   ]
 
